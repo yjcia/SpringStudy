@@ -1,0 +1,10 @@
+CREATE TABLE springtest.t_user (
+	id int NOT NULL AUTO_INCREMENT,
+	user_name VARCHAR(100) NOT NULL,
+	email VARCHAR(100) NOT NULL,
+	password VARCHAR(50) NOT NULL,
+	CONSTRAINT t_user_pk PRIMARY KEY (id)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_general_ci;

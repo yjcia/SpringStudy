@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Build-Jdk: 1.6.0_20
+Built-By: YanJun
+Created-By: IntelliJ IDEA
+
