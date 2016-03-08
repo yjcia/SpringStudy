@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -16,10 +17,15 @@
     <script type="text/javascript" src="bootstrapValidator/dist/js/bootstrapValidator.js"></script>
     <script type="text/javascript" src="bootstrap/js/loginValidator.js"></script>
 </head>
-<body>
+<body class="body-signin">
     <div class="container">
 
         <form class="form-signin" action="doLogin" method="post" id="userLoginForm">
+            <div class="form-group">
+                <c:if test="${errMsg != null}">
+                    <div class="alert alert-danger" role="alert">${errMsg}</div>
+                </c:if>
+            </div>
             <div class="form-group">
                 <label for="inputEmail" class="sr-only">Email address</label>
                 <input type="email" name="email" id="inputEmail" class="form-control"
@@ -33,7 +39,7 @@
             <div class="form-group">
                 <div class="btn-group btn-group-justified" role="group">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-primary" type="submit" name="submit">Sign in</button>
+                        <input class="btn btn-primary" type="submit" value="Sign in"/>
                     </div>
                     <div class="btn-group" role="group">
                         <button class="btn btn-info" type="button">Register</button>

@@ -1,5 +1,10 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<jsp:include page="WEB-INF/jsp/toolbar.jsp"/>
+<div class="jumbotron">
+    <h1>Environment Parameter Info</h1>
+    <p>FTP Patch Database</p>
+
+</div>
 </body>
 </html>

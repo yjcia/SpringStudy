@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dao.WeblogicDao">
+    <resultMap type="Weblogic" id="WeblogicResult">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="path" column="path" />
+        <result property="host" column="host" />
+        <result property="remark" column="remark" />
+        <result property="rspath" column="rspath" />
+    </resultMap>
+    <select id="findWeblogicList" resultType="Weblogic">
+        select * from t_weblogic;
+    </select>
+    <select id="loadWeblogicById" parameterType="int" resultType="Weblogic">
+        select * from t_weblogic where id = #{id}
+    </select>
+    <insert id="addWeblogicInfo" parameterType="Weblogic">
+        insert into t_weblogic(name,path,remark,host,rspath)
+        values(#{name},#{path},#{remark},#{host},#{rspath})
+    </insert>
+    <delete id="deleteWeblogicInfoById">
+        delete from t_weblogic
+        <where>
+            id in
+            <foreach collection="array"  item="id" index="index"
+                           open="(" separator="," close=")">#{id}
+
+            </foreach>
+        </where>
+    </delete>
+    <update id="updateWeblogic" parameterType="Weblogic">
+        update t_weblogic set name = #{name},rspath = #{rspath},remark = #{remark},
+        host = #{host},path = #{path} where id = #{id}
+    </update>
+</mapper>

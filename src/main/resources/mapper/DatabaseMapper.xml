@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dao.DatabaseDao">
+    <resultMap type="Database" id="DatabaseResult">
+        <id property="id" column="id" />
+        <result property="service" column="service" />
+        <result property="port" column="port" />
+        <result property="host" column="host" />
+        <result property="url" column="url" />
+        <result property="user" column="user" />
+        <result property="password" column="password" />
+    </resultMap>
+    <select id="findDatabaseList" resultType="Database">
+        select * from t_database;
+    </select>
+    <select id="loadDatabaseById" parameterType="int" resultType="Database">
+        select * from t_database where id = #{id}
+    </select>
+    <insert id="addDatabaseInfo" parameterType="Database">
+        insert into t_database(host,port,url,service,user,password)
+        values(#{host},#{port},#{url},#{service},#{user},#{password})
+    </insert>
+    <delete id="deleteDatabaseInfoById">
+        delete from t_database
+        <where>
+            id in
+            <foreach collection="array"  item="id" index="index"
+                           open="(" separator="," close=")">#{id}
+
+            </foreach>
+        </where>
+    </delete>
+    <update id="updateDatabase" parameterType="Database">
+        update t_database set host = #{host},user = #{user} , password = #{password},
+        port = #{port},service = #{service},url = #{url} where id = #{id}
+    </update>
+</mapper>

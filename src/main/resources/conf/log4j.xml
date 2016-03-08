@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %l %m%n"/>
+        </layout> <!--限制输出级别 -->
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="ERROR"/>
+            <param name="LevelMin" value="DEBUG"/>
+        </filter>
+    </appender>
+    <!-- 通过<category></category>的定义可以将各个包中的类日志输出到不同的日志文件中 -->
+    <category name="org.springframework">
+        <priority value="error" />
+        <appender-ref ref="CONSOLE" />
+    </category>
+    <root>
+        <priority value="debug"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</log4j:configuration>

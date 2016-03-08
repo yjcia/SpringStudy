@@ -11,4 +11,24 @@
     <select id="findUserByEmail" parameterType="String" resultMap="UserResult">
       select * from t_user where email = #{email}
     </select>
+    <select id="findUserByEmailAndPwd" resultType="User">
+        select * from t_user where email = #{0} and password = #{1}
+    </select>
+    <!--<select id="findFtpList" resultType="Ftp">-->
+        <!--select * from t_ftp;-->
+    <!--</select>-->
+    <!--<insert id="addFtpInfo" parameterType="Ftp">-->
+        <!--insert into t_ftp(host_name,user,password,port,path,remark)-->
+        <!--values(#{hostName},#{user},#{password},#{port},#{path},#{remark})-->
+    <!--</insert>-->
+    <!--<delete id="deleteFtpInfoById">-->
+        <!--delete from t_ftp-->
+        <!--<where>-->
+            <!--id in-->
+            <!--<foreach collection="array"  item="id" index="index"-->
+                           <!--open="(" separator="," close=")">#{id}-->
+
+            <!--</foreach>-->
+        <!--</where>-->
+    <!--</delete>-->
 </mapper>

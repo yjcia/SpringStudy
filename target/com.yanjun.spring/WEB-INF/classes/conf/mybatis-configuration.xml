@@ -3,6 +3,10 @@
 <configuration>
 <typeAliases>
     <typeAlias alias="User" type="com.spring.model.User"/>
+    <typeAlias alias="Ftp" type="com.spring.model.Ftp"/>
+    <typeAlias alias="Patch" type="com.spring.model.Patch"/>
+    <typeAlias alias="Database" type="com.spring.model.Database"/>
+    <typeAlias alias="Weblogic" type="com.spring.model.Weblogic"/>
 </typeAliases>
 <mappers>
 </mappers>

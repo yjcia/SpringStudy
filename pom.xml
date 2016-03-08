@@ -17,6 +17,8 @@
         <jstl.version>1.2</jstl.version>
         <log4j.version>1.2.12</log4j.version>
         <slf4j.version>1.6.6</slf4j.version>
+        <jackson.version>2.5.0</jackson.version>
+        <jsonlib.version>2.3</jsonlib.version>
     </properties>
 
     <dependencies>
@@ -143,17 +145,27 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.5.0</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.5.0</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.5.0</version>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.sf.json-lib</groupId>-->
+            <!--<artifactId>json-lib</artifactId>-->
+            <!--<version>${jsonlib.version}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.6.1</version>
         </dependency>
         <!-- json -->
     </dependencies>

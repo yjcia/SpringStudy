@@ -10,6 +10,7 @@
     <!-- spring管理web资源文件 -->
     <mvc:resources location="/WEB-INF/bootstrap/" mapping="/bootstrap/**"/>
     <mvc:resources location="/WEB-INF/bootstrapValidator/" mapping="/bootstrapValidator/**"/>
+    <mvc:resources location="/WEB-INF/bootstrap-table/" mapping="/bootstrap-table/**"/>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

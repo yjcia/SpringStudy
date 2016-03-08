@@ -41,6 +41,7 @@ $(document).ready(function() {
                         regexp: /^[a-zA-Z0-9_]+$/,
                         message: 'The password can only consist of alphabetical, number and underscore'
                     }
+
                 }
             }
         }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dao.PatchDao">
+    <resultMap type="Patch" id="PatchResult">
+        <id property="id" column="id" />
+        <result property="patch_name" column="patch_name" />
+        <result property="path" column="path" />
+        <result property="host" column="host" />
+        <result property="script" column="script" />
+        <result property="user" column="user" />
+        <result property="password" column="password" />
+    </resultMap>
+    <select id="findPatchList" resultType="Patch">
+        select * from t_patch;
+    </select>
+    <select id="loadPatchById" parameterType="int" resultType="Patch">
+        select * from t_patch where id = #{id}
+    </select>
+    <insert id="addPatchInfo" parameterType="Patch">
+        insert into t_patch(patch_name,path,script,host,user,password)
+        values(#{patch_name},#{path},#{script},#{host},#{user},#{password})
+    </insert>
+    <delete id="deletePatchInfoById">
+        delete from t_patch
+        <where>
+            id in
+            <foreach collection="array"  item="id" index="index"
+                           open="(" separator="," close=")">#{id}
+
+            </foreach>
+        </where>
+    </delete>
+    <update id="updatePatch" parameterType="Patch">
+        update t_patch set patch_name = #{patch_name},user = #{user} , password = #{password},
+        host = #{host},path = #{path},script = #{script} where id = #{id}
+    </update>
+</mapper>
