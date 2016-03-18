@@ -131,7 +131,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="closeLog" type="button" class="btn btn-default" data-dismiss="modal"
+                        onclick="closeLog()">Close</button>
             </div>
         </div>
     </div>
@@ -140,6 +141,7 @@
 
     var ftpData = null;
     var $table = null;
+    var websocket = null;
     $(function () {
         $table = $('#weblogic_table').bootstrapTable({
             method: 'post',
@@ -269,16 +271,13 @@
             });
 
         },'click #weblogicLog': function (e, value, row, index) {
-            var websocket = new WebSocket('ws://10.104.46.238:8080/environment/weblogicServerLog');
+            $('#showWeblogicLog').modal('show');
+            websocket = new WebSocket('ws://10.104.46.238:8080/environment/weblogicServerLog');
 
             websocket.onmessage = function(event) {
                 $('#log-text').append(event.data);
                 $('#log-text').scrollTop( $('#log-text')[0].scrollHeight );
-                $('#showWeblogicLog').modal('show');
-                $('#showWeblogicLog').on('hide.bs.modal', function (e) {
-                    $('#log-text').empty();
-                    websocket.send("close");
-                });
+
                 // 接收服务端的实时日志并添加到HTML页面中
                 //$("#log-container div").append(event.data);
                 // 滚动条滚动到最低部
@@ -287,6 +286,14 @@
             };
         }
     };
+    function closeLog() {
+        $('#showWeblogicLog').modal('hide');
+        if (websocket) {
+            websocket.close();
+            websocket = null;
+        }
+    };
+
 
 </script>
 </body>
