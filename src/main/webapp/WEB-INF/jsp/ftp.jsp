@@ -243,11 +243,11 @@
 
     function operateFormatter(value, row, index) {
         return [
-            '<button class="update" type="button" class="btn btn-info">Update</button>'
+            '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>'
         ].join('');
     }
     window.operateEvents = {
-        'click .update': function (e, value, row, index) {
+        'click #update': function (e, value, row, index) {
             $.ajax({
                 type: "post",
                 url: "/environment/getFtpById",

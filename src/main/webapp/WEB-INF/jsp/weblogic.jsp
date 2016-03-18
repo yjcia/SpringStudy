@@ -227,11 +227,12 @@
 
     function operateFormatter(value, row, index) {
         return [
-            '<button class="update" type="button" class="btn btn-info">Update</button>'
+            '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>&nbsp&nbsp',
+            '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>'
         ].join('');
     }
     window.operateEvents = {
-        'click .update': function (e, value, row, index) {
+        'click #update': function (e, value, row, index) {
             $.ajax({
                 type: "post",
                 url: "/environment/getWeblogicById",

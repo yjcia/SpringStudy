@@ -28,4 +28,6 @@ public class UserDaoTest {
         System.out.println(u);
         Assert.assertNotNull(u);
     }
+
+
 }

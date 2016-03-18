@@ -1,9 +1,11 @@
 package com.spring.controller;
 
+import ch.ethz.ssh2.*;
 import com.spring.model.Ftp;
 import com.spring.model.Patch;
 import com.spring.service.IFtpService;
 import com.spring.service.IPatchService;
+import com.spring.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -99,4 +105,45 @@ public class PatchOperationController {
         return "redirect:patch";
     }
 
+
+    @RequestMapping(value = "/showPatchScript" , method = RequestMethod.POST)
+    @ResponseBody
+    public String showPatchScript(
+            @RequestParam("user") String user,
+            @RequestParam("password") String password,
+            @RequestParam("script") String script,
+            @RequestParam("path") String path,
+            @RequestParam("host") String host
+    ){
+        Connection conn = null;
+        Session session = null;
+        InputStream stdout = null;
+        BufferedReader br = null;
+        String scriptShell = "";
+        try {
+            conn = new Connection(host);
+            ConnectionInfo info = conn.connect();
+            boolean result = conn.authenticateWithPassword(user, password);
+            if(result) {
+                Session sess = conn.openSession();
+                sess.execCommand("cat "+ path + "/" + script);
+                stdout = new StreamGobbler(sess.getStdout());
+                BufferedReader stdoutReader = new BufferedReader(
+                        new InputStreamReader(stdout));
+                while (true) {
+                    String line = stdoutReader.readLine();
+                    if (line == null)
+                        break;
+                    scriptShell += (line+"\n");
+                    //System.out.println(line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            IOUtil.close(br,stdout,session,conn);
+
+        }
+        return scriptShell;
+    }
 }

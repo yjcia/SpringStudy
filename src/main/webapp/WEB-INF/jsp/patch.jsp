@@ -130,11 +130,29 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="showPatchScriptShell" tabindex="-1" role="dialog" aria-labelledby="showPatchScriptShell">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="shell-text" class="control-label">Script:</label>
+                    <textarea class="form-control" id="shell-text"
+                              style="color:white;background-color:black;height: 500px"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 
     var ftpData = null;
     var $table = null;
     $(function () {
+
         $table = $('#patch_table').bootstrapTable({
             method: 'post',
             url: '/environment/getPatchList',
@@ -244,11 +262,12 @@
 
     function operateFormatter(value, row, index) {
         return [
-            '<button class="update" type="button" class="btn btn-info">Update</button>'
+            '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>&nbsp&nbsp',
+            '<span id="showPatchScript" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="cursor: hand"></span>'
         ].join('');
     }
     window.operateEvents = {
-        'click .update': function (e, value, row, index) {
+        'click #update': function (e, value, row, index) {
             $.ajax({
                 type: "post",
                 url: "/environment/getPatchById",
@@ -269,8 +288,30 @@
                 }
             });
 
-        }
-    };
+        },'click #showPatchScript': function (e, value, row, index) {
+            $.ajax({
+                type: "post",
+                url: "/environment/showPatchScript",
+                data: {
+                    user: row.user,
+                    password: row.password,
+                    host: row.host,
+                    path: row.path,
+                    script: row.script
+                },
+                success: function (data) {
+                    var jsonObj = $.parseJSON(data);
+                    if (jsonObj != null) {
+                        $('#shell-text').val(jsonObj);
+                        $('#showPatchScriptShell').modal('show');
+
+                    }
+                }
+            });
+        }}
+    $('#showPatchScriptShell').on('hide.bs.modal', function (e) {
+        $('#patchShell').empty();
+    })
 
 </script>
 </body>
