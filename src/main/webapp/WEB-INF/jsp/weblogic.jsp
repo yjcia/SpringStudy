@@ -120,6 +120,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="showWeblogicLog" tabindex="-1" role="dialog" aria-labelledby="showWeblogicLog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="log-text" class="control-label">Log:</label>
+                    <textarea class="form-control" id="log-text"
+                              style="color:white;background-color:black;height: 500px"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 
     var ftpData = null;
@@ -228,7 +244,7 @@
     function operateFormatter(value, row, index) {
         return [
             '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>&nbsp&nbsp',
-            '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>'
+            '<span id="weblogicLog" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="cursor: hand"></span>'
         ].join('');
     }
     window.operateEvents = {
@@ -252,6 +268,23 @@
                 }
             });
 
+        },'click #weblogicLog': function (e, value, row, index) {
+            var websocket = new WebSocket('ws://10.104.46.238:8080/environment/weblogicServerLog');
+
+            websocket.onmessage = function(event) {
+                $('#log-text').append(event.data);
+                $('#log-text').scrollTop( $('#log-text')[0].scrollHeight );
+                $('#showWeblogicLog').modal('show');
+                $('#showWeblogicLog').on('hide.bs.modal', function (e) {
+                    $('#log-text').empty();
+                    websocket.send("close");
+                });
+                // 接收服务端的实时日志并添加到HTML页面中
+                //$("#log-container div").append(event.data);
+                // 滚动条滚动到最低部
+                //$("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+
+            };
         }
     };
 

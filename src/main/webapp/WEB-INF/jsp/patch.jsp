@@ -308,7 +308,7 @@
                     }
                 }
             });
-        }}
+        }};
     $('#showPatchScriptShell').on('hide.bs.modal', function (e) {
         $('#patchShell').empty();
     })
