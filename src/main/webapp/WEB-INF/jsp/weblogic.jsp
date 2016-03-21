@@ -121,7 +121,7 @@
     </div>
 </div>
 <div class="modal fade" id="showWeblogicLog" tabindex="-1" role="dialog" aria-labelledby="showWeblogicLog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="form-group">
@@ -133,6 +133,23 @@
             <div class="modal-footer">
                 <button id="closeLog" type="button" class="btn btn-default" data-dismiss="modal"
                         onclick="closeLog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="showStartWeblogicLog" tabindex="-1" role="dialog" aria-labelledby="showStartWeblogicLog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="startlog-text" class="control-label">Log:</label>
+                    <textarea class="form-control" id="startlog-text"
+                              style="color:white;background-color:black;height: 500px"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeStartLog" type="button" class="btn btn-default" data-dismiss="modal"
+                        onclick="closeStartLog()">Close</button>
             </div>
         </div>
     </div>
@@ -193,7 +210,13 @@
                     title: 'Remark',
                     align: 'center',
                     valign: 'middle'
-                }, {
+                },{
+                    field: 'wstatus',
+                    title: 'Status',
+                    align: 'center',
+                    formatter: statusFormatter
+                },
+                {
                     field: 'operate',
                     title: 'Operate',
                     align: 'center',
@@ -242,9 +265,24 @@
             return row.id
         });
     }
-
-    function operateFormatter(value, row, index) {
+    function statusFormatter(value, row, index) {
+        var statusSpan = '<span class="label label-success">Started</span>&nbsp&nbsp';
+        if(row.status == 0){
+            statusSpan = '<span class="label label-default">Stop</span>&nbsp&nbsp';
+        }
         return [
+            statusSpan
+        ].join('');
+    }
+    function operateFormatter(value, row, index) {
+        var startWeblogicSpan = '<span id="startWeblogic" class="glyphicon glyphicon-play" ' +
+                'aria-hidden="true" style="cursor: hand"></span>&nbsp&nbsp';
+
+        if(row.status == 1){
+            startWeblogicSpan = '';
+        }
+        return [
+            startWeblogicSpan,
             '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>&nbsp&nbsp',
             '<span id="weblogicLog" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="cursor: hand"></span>'
         ].join('');
@@ -272,27 +310,35 @@
 
         },'click #weblogicLog': function (e, value, row, index) {
             $('#showWeblogicLog').modal('show');
-            websocket = new WebSocket('ws://10.104.46.238:8080/environment/weblogicServerLog');
-
+            websocket = new WebSocket('ws://10.104.46.238:8080/environment/weblogicServerLog?id='+row.id);
             websocket.onmessage = function(event) {
                 $('#log-text').append(event.data);
                 $('#log-text').scrollTop( $('#log-text')[0].scrollHeight );
-
-                // 接收服务端的实时日志并添加到HTML页面中
-                //$("#log-container div").append(event.data);
-                // 滚动条滚动到最低部
-                //$("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
-
+            };
+        },'click #startWeblogic': function (e, value, row, index) {
+            $('#showStartWeblogicLog').modal('show');
+            websocket = new WebSocket('ws://10.104.46.238:8080/environment/startWeblogic?id='+row.id);
+            websocket.onmessage = function(event) {
+                $('#startlog-text').append(event.data);
+                $('#startlog-text').scrollTop($('#startlog-text')[0].scrollHeight);
             };
         }
     };
     function closeLog() {
         $('#showWeblogicLog').modal('hide');
+        $('#log-text').empty();
         if (websocket) {
             websocket.close();
             websocket = null;
         }
-    };
+    }
+    function closeStartLog(){
+        $('#showStartWeblogicLog').modal('hide');
+        if (websocket) {
+            websocket.close();
+            websocket = null;
+        }
+    }
 
 
 </script>

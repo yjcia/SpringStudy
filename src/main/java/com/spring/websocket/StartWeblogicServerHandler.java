@@ -1,7 +1,5 @@
 package com.spring.websocket;
 
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.ConnectionInfo;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
 import com.spring.common.SocketAttribute;
@@ -12,13 +10,10 @@ import com.spring.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.*;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -26,8 +21,8 @@ import java.io.InputStreamReader;
  */
 
 @Service
-public class WeblogicServerLogHandler implements WebSocketHandler {
-    private static final Logger logger = LoggerFactory.getLogger(WeblogicServerLogHandler.class);
+public class StartWeblogicServerHandler implements WebSocketHandler {
+    private static final Logger logger = LoggerFactory.getLogger(StartWeblogicServerHandler.class);
     private BufferedReader stdoutReader = null;
     private Session session = null;
     private StreamGobbler stdout = null;
@@ -43,7 +38,7 @@ public class WeblogicServerLogHandler implements WebSocketHandler {
         int id = Integer.parseInt(webSocketSession.getAttributes().get(SocketAttribute.WEBLOGIC_ID).toString());
         Weblogic weblogic = weblogicService.loadWeblogicById(id);
 
-        session = webSocketService.getCurrentWeblogicLog(weblogic, webSocketSession);
+        session = webSocketService.getStartWeblogicLog(weblogic, webSocketSession);
         stdout = new StreamGobbler(session.getStdout());
         stdoutReader = new BufferedReader(
                 new InputStreamReader(stdout));
@@ -53,7 +48,6 @@ public class WeblogicServerLogHandler implements WebSocketHandler {
                 break;
             webSocketSession.sendMessage(new TextMessage(line + "\n"));
         }
-        //IOUtil.close(stdoutReader,stdout,session);
     }
 
     public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) throws Exception {
@@ -72,8 +66,7 @@ public class WeblogicServerLogHandler implements WebSocketHandler {
 
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
         logger.debug("websocket connection closed......");
-        IOUtil.close(stdoutReader,stdout,session);
-        //webSocketSession.close();
+        IOUtil.close(stdoutReader,stdout);
 
     }
 

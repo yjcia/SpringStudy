@@ -18,12 +18,15 @@ public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocke
 
     @Autowired
     private WeblogicServerLogHandler weblogicServerLogHandler;
+    @Autowired
+    private StartWeblogicServerHandler startWeblogicServerHandler;
 
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         webSocketHandlerRegistry.addHandler(weblogicServerLogHandler, "/weblogicServerLog")
                 .addInterceptors(new WebSocketHandshakeInterceptor());
 
-
+        webSocketHandlerRegistry.addHandler(startWeblogicServerHandler, "/startWeblogic")
+                .addInterceptors(new WebSocketHandshakeInterceptor());
     }
 
 

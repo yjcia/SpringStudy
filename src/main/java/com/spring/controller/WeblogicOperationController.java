@@ -1,6 +1,7 @@
 package com.spring.controller;
 
 import com.spring.model.Weblogic;
+import com.spring.service.IWebSocketService;
 import com.spring.service.IWeblogicService;
 import com.spring.service.IWeblogicService;
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ public class WeblogicOperationController {
     @Autowired
     private IWeblogicService weblogicService;
 
+    @Autowired
+    private IWebSocketService webSocketService;
 
 
     @RequestMapping(value="/weblogic",method = RequestMethod.GET)
@@ -35,8 +38,11 @@ public class WeblogicOperationController {
     @RequestMapping(value = "/getWeblogicList",method = RequestMethod.POST)
     @ResponseBody
     public List<Weblogic> getWeblogicList(){
-        List<Weblogic> WeblogicList = weblogicService.findWeblogicList();
-        return WeblogicList;
+        List<Weblogic> weblogicList = weblogicService.findWeblogicList();
+        for(Weblogic w:weblogicList){
+            w.setStatus(webSocketService.getCurrentWeblogicStatus(w));
+        }
+        return weblogicList;
     }
     @RequestMapping(value = "/doSaveWeblogic" , method = RequestMethod.POST)
     public String addNewFtp(

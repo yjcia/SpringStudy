@@ -25,4 +25,27 @@ public class IOUtil {
             e.printStackTrace();
         }
     }
+    public static void close(BufferedReader br, InputStream stdout, Session session){
+        try {
+            if(br != null)
+                br.close();
+            if(stdout != null)
+                stdout.close();
+            if(session != null)
+                session.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void close(BufferedReader br, InputStream stdout){
+        try {
+            if(br != null)
+                br.close();
+            if(stdout != null)
+                stdout.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

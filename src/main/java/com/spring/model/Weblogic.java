@@ -10,6 +10,15 @@ public class Weblogic {
     private String rspath;
     private String host;
     private String remark;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getId() {
         return id;
