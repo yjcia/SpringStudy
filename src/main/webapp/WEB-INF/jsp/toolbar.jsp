@@ -21,6 +21,8 @@
                 </li>
                 <li><a href="/environment/weblogic"><span
                         class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;Weblogic</a></li>
+                <li><a href="/environment/storage"><span
+                        class="glyphicon glyphicon-scale"></span>&nbsp;&nbsp;Storage</a></li>
             </ul>
         </div>
     </div>

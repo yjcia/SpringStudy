@@ -11,4 +11,5 @@ public class SocketAttribute {
     public static final String START_WEBLOGIC = "startWeblogic.sh";
     public static final String WEBLOGIC_NOHUP_SCRIPT = "tail -f nohup.out";
     public static final String WEBLOGIC_START_SCRIPT = "./startWeblogic.sh";
+    public static final String STORAGE_USE_SCRIPT = "df -vh";
 }

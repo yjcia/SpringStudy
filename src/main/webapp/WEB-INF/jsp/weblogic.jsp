@@ -207,7 +207,7 @@
                     valign: 'middle'
                 },{
                     field: 'remark',
-                    title: 'Remark',
+                    title: 'Version',
                     align: 'center',
                     valign: 'middle'
                 },{
@@ -282,7 +282,7 @@
             startWeblogicSpan = '';
         }
         return [
-            startWeblogicSpan,
+            //startWeblogicSpan,
             '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>&nbsp&nbsp',
             '<span id="weblogicLog" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="cursor: hand"></span>'
         ].join('');

@@ -30,7 +30,7 @@ public class WeblogicOperationController {
 
 
     @RequestMapping(value="/weblogic",method = RequestMethod.GET)
-    public String Weblogic(){
+    public String weblogic(){
         logger.debug("user weblogic!");
         return "weblogic";
     }
