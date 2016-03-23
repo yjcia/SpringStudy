@@ -124,9 +124,17 @@
         ].join('');
     }
     function usedFormatter(value,row,index){
+        var barStyleClass = "progress-bar-success";
+        if(row.use>=0 && row.use<=50){
+            barStyleClass = "progress-bar-info";
+        }else if(row.use>50 && row.use<=80){
+            barStyleClass = "progress-bar-warning";
+        }else if(row.use>80 && row.use<=100){
+            barStyleClass = "progress-bar-danger";
+        }
         return [
             '<div class="progress">' +
-            '<div class="progress-bar" role="progressbar" ' +
+            '<div class="progress-bar progress-bar-striped active '+ barStyleClass + '" role="progressbar" ' +
             'aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+row.use+';">' +
              row.use+'%</div></div>'
         ].join('');
