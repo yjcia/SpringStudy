@@ -1,12 +1,7 @@
 package com.spring.controller;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.spring.model.Ftp;
 import com.spring.model.User;
 import com.spring.service.IUserService;
-import com.spring.util.LoggerNames;
 import com.spring.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

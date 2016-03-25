@@ -23,6 +23,8 @@
                         class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;Weblogic</a></li>
                 <li><a href="/environment/storage"><span
                         class="glyphicon glyphicon-scale"></span>&nbsp;&nbsp;Storage</a></li>
+                <li><a href="/environment/logAnalysis"><span
+                        class="glyphicon glyphicon-object-align-bottom"></span>&nbsp;&nbsp;Log Analysis</a></li>
             </ul>
         </div>
     </div>

@@ -92,12 +92,6 @@
                     align: 'center',
                     valign: 'middle'
 
-                }, {
-                    field: 'operate',
-                    title: 'Operate',
-                    align: 'center',
-                    events: operateEvents,
-                    formatter: operateFormatter
                 }
             ]
         });
@@ -118,11 +112,6 @@
         });
     }
 
-    function operateFormatter(value, row, index) {
-        return [
-            '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>'
-        ].join('');
-    }
     function usedFormatter(value,row,index){
         var barStyleClass = "progress-bar-success";
         if(row.use>=0 && row.use<=50){
@@ -139,10 +128,7 @@
              row.use+'%</div></div>'
         ].join('');
     }
-    window.operateEvents = {
-        'click #update': function (e, value, row, index) {
-        }
-    };
+
 
 </script>
 </body>
