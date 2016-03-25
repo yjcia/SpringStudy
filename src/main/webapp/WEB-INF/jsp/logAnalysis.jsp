@@ -44,44 +44,58 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade " id="loadingModalForLog" tabindex="-1" role="dialog" aria-labelledby="execSqlLoading">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                Analysis Log ...
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     function startAnalysisSql(){
-        $.ajax({
-            type: "post",
-            url: "/environment/getLogSqlExecTimeList",
-            dataType: "json",
-            data:{
-                path:$('#logPath').val()
-            },
-            success: function (result) {
-                console.log(result);
-                $('#log_table').bootstrapTable({
-                    //method: 'post',
-                    //url: '/environment/getLogSqlExecTimeList',
-                    cache: false,
-                    striped: true,
-                    search: true,
-                    showRefresh: true,
-                    showToggle: true,
-                    pagination:true,
-                    data:result,
-                    columns: [
-                        {
-                            field: 'execSelectSql',
-                            title: 'Exec Sql',
-                            formatter:execSqlFormatter
-                        },
-                        {
-                            field: 'execTime',
-                            title: 'Exec Time (MS)',
-                            formatter:execTimeFormatter,
-                            sortable:true
-                        }
-                    ]
-                });
+        var modalHasShow = 0;
+        $('#loadingModalForLog').modal('show');
+        $('#loadingModalForLog').on('shown.bs.modal', function (e) {
+            $.ajax({
+                type: "post",
+                url: "/environment/getLogSqlExecTimeList",
+                dataType: "json",
+                async:false,
+                data:{
+                    path:$('#logPath').val()
+                },
+                success: function (result) {
+                    console.log(result);
+                    $('#log_table').bootstrapTable({
+                        //method: 'post',
+                        //url: '/environment/getLogSqlExecTimeList',
+                        cache: false,
+                        striped: true,
+                        search: true,
+                        showRefresh: true,
+                        showToggle: true,
+                        pagination:true,
+                        data:result,
+                        columns: [
+                            {
+                                field: 'execSelectSql',
+                                title: 'Exec Sql',
+                                formatter:execSqlFormatter
+                            },
+                            {
+                                field: 'execTime',
+                                title: 'Exec Time (MS)',
+                                formatter:execTimeFormatter,
+                                sortable:true
+                            }
+                        ]
+                    });
+                    $('#loadingModalForLog').modal('hide');
 
-            }
+                }
+            });
         });
     }
     function execTimeFormatter(value,row,index){
@@ -89,7 +103,8 @@
             '<div class="progress">' +
             '<div class="progress-bar progress-bar-striped active progress-bar-info " role="progressbar" ' +
             'aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+ row.execTime/10 +';">' +
-            row.execTime+'MS</div></div>'
+            '<h7 style="color:black">'+row.execTime+'MS</h7>' +
+            '</div></div>'
         ].join('');
     }
 

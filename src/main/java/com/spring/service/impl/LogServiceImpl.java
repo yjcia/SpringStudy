@@ -50,6 +50,7 @@ public class LogServiceImpl implements ILogService {
             StringBuffer execTimeBuf = new StringBuffer("");
             int sqlIndex = 0;
             int execTimeIndex = 0;
+            int lineIndex = 0;
             while (fcin.read(rBuffer) != -1) {
                 int rSize = rBuffer.position();
                 rBuffer.rewind();
@@ -62,22 +63,23 @@ public class LogServiceImpl implements ILogService {
                         (endIndex = tempString.indexOf(enterStr2, fromIndex)) != -1) {
                     String line = tempString.substring(fromIndex, endIndex);
                     line = new String(strBuf.toString() + line);
-                    //System.out.println(line);
-
+                    System.out.println(line);
+                    lineIndex++;
                     if (sqlFindMode == 1 && line.indexOf(LogAttribute.USER_FLAG) >= 0) {
                         sqlFindMode = 0;
                     } else if (sqlFindMode == 1) {
                         sqlBuf.append(line).append(" ");
-                    } else if (line.indexOf(LogAttribute.EXEC_SQL_FLAG) > 0
-                            && line.indexOf(LogAttribute.USER_FLAG) < 0) {
+                    } else if (line.indexOf(LogAttribute.EXEC_SQL_FLAG) > 0 && line.indexOf(LogAttribute.USER_FLAG) < 0) {
                         sqlFindMode = 1;
-                        sqlBuf.append(line.substring(line.indexOf(LogAttribute.EXEC_SQL_FLAG)));
+                        int execSqlFlagIndex = line.indexOf(LogAttribute.EXEC_SQL_FLAG);
+                        //判断exec sql 标志位是不是最后的字符串
+                        if((execSqlFlagIndex + 1 + LogAttribute.EXEC_SQL_FLAG.length()) != line.length()){
+                            sqlBuf.append(line.substring(line.indexOf(LogAttribute.EXEC_SQL_FLAG)));
+                        }
                     }
                     if (execTimeMode == 1 && line.indexOf(LogAttribute.EXEC_TIME_FLAG) < 0) {
                         execTimeMode = 0;
-                    } else if (execTimeMode == 1) {
-                        execTimeBuf.append(line).append(" ");
-                    } else if (line.indexOf(LogAttribute.EXEC_TIME_FLAG) > 0) {
+                    }else if (line.indexOf(LogAttribute.EXEC_TIME_FLAG) > 0) {
                         execTimeMode = 1;
                         execTimeBuf.append(
                                 line.substring(line.indexOf(LogAttribute.EXEC_TIME_FLAG),
@@ -89,12 +91,12 @@ public class LogServiceImpl implements ILogService {
                     fromIndex = endIndex + 1;
                 }
                 if (!StringUtil.isEmpty(sqlBuf.toString()) && sqlFindMode == 0) {
-                    sqlMap.put(sqlIndex, sqlBuf.toString());
+                    sqlMap.put(lineIndex, sqlBuf.toString());
                     sqlBuf.delete(0, sqlBuf.length());
-                    sqlIndex++;
+
                 }
-                if (!StringUtil.isEmpty(execTimeBuf.toString()) && execTimeMode == 0) {
-                    execTimeMap.put(execTimeIndex, execTimeBuf.toString());
+                if (!StringUtil.isEmpty(execTimeBuf.toString()) && execTimeMode == 1) {
+                    execTimeMap.put(lineIndex-1, execTimeBuf.toString());
                     execTimeBuf.delete(0, execTimeBuf.length());
                     execTimeIndex++;
                 }
@@ -109,9 +111,13 @@ public class LogServiceImpl implements ILogService {
                 LogModel log = new LogModel();
                 log.setId(key);
                 String execSqlStr = sqlMap.get(key);
-                log.setExecSelectSql(execSqlStr.substring(execSqlStr.indexOf(":") + 1));
+                if(!StringUtil.isEmpty(execSqlStr)){
+                    log.setExecSelectSql(execSqlStr.substring(execSqlStr.indexOf(":") + 1));
+                }
                 String execTimeStr = execTimeMap.get(key);
-                log.setExecTime(execTimeStr.substring(execTimeStr.indexOf(":") + 1,execTimeStr.indexOf(" MS")));
+                if(!StringUtil.isEmpty(execTimeStr)){
+                    log.setExecTime(execTimeStr.substring(execTimeStr.indexOf(":") + 1,execTimeStr.indexOf(" MS")));
+                }
                 logList.add(log);
             }
         } catch (IOException e) {
