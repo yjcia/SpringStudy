@@ -15,6 +15,10 @@
         <priority value="error" />
         <appender-ref ref="CONSOLE" />
     </category>
+    <category name="org.quartz">
+        <priority value="warn" />
+        <appender-ref ref="CONSOLE" />
+    </category>
     <root>
         <priority value="debug"/>
         <appender-ref ref="CONSOLE"/>
