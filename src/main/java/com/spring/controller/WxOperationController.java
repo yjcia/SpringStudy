@@ -3,7 +3,6 @@ package com.spring.controller;
 import com.spring.common.WXAttribute;
 import com.spring.model.WxMessage;
 import com.spring.service.IWeixinService;
-import com.spring.util.StringUtil;
 import com.spring.util.WxUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +31,15 @@ public class WxOperationController {
     @Autowired
     private IWeixinService weixinService;
 
-    @RequestMapping(value="/wx",method = RequestMethod.GET)
+    @RequestMapping(value = "/wx", method = RequestMethod.GET)
     public void valid(@RequestParam("signature") String signature,
                       @RequestParam("timestamp") String timestamp,
                       @RequestParam("nonce") String nonce,
-                      @RequestParam("echostr") String echostr,HttpServletResponse response){
+                      @RequestParam("echostr") String echostr, HttpServletResponse response) {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            if (WxUtil.signCheck(signature,timestamp,nonce,echostr)) {
+            if (WxUtil.signCheck(signature, timestamp, nonce, echostr)) {
                 out.print(echostr);
             } else {
                 System.out.println("server valid error");
@@ -54,14 +53,14 @@ public class WxOperationController {
     }
 
     //测试账号接口认证
-    @RequestMapping(value="/wxGetMsg",method = RequestMethod.POST)
+    @RequestMapping(value = "/wxGetMsg", method = RequestMethod.POST)
     public void getTesterClientMessage(HttpServletRequest request,
-                      HttpServletResponse response) {
-       getClientMessage(request,response);
+                                       HttpServletResponse response) {
+        getClientMessage(request, response);
 
     }
 
-    @RequestMapping(value="/wx",method = RequestMethod.POST)
+    @RequestMapping(value = "/wx", method = RequestMethod.POST)
     public void getClientMessage(HttpServletRequest request,
                                  HttpServletResponse response) {
         try {
@@ -69,7 +68,7 @@ public class WxOperationController {
             response.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();
             String message = WxUtil.encodeReceiveMessage(request);
-            WxMessage wMessage = weixinService.prepareWxMessageBean(WxMessage.class,message);
+            WxMessage wMessage = weixinService.prepareWxMessageBean(WxMessage.class, message);
             logger.debug("receive message ---> " + wMessage);
             WxMessage returnMessage = new WxMessage();
             returnMessage.setToUserName(wMessage.getFromUserName());
@@ -78,11 +77,11 @@ public class WxOperationController {
             returnMessage.setEventKey(wMessage.getEventKey());
             returnMessage.setEvent(wMessage.getEvent());
 
-            if(wMessage.getMsgType().equals(WXAttribute.MSGTYPE_TEXT)){
-                handleTextMessage(out,returnMessage);
+            if (wMessage.getMsgType().equals(WXAttribute.MSGTYPE_TEXT)) {
+                handleTextMessage(out, returnMessage);
 
-            }else if(wMessage.getMsgType().equals(WXAttribute.MSGTYPE_EVENT)){
-                handleEventMessage(out,returnMessage);
+            } else if (wMessage.getMsgType().equals(WXAttribute.MSGTYPE_EVENT)) {
+                handleEventMessage(out, returnMessage);
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -102,13 +101,13 @@ public class WxOperationController {
             throws IllegalAccessException, IntrospectionException, InvocationTargetException {
         returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
         returnMessage.setContent("你好");
-        weixinService.sendReturnMessage(out,WxUtil.generateReturnMessage(returnMessage));
+        weixinService.sendReturnMessage(out, WxUtil.generateReturnMessage(returnMessage));
     }
 
-    private void handleTextMessage(PrintWriter out ,WxMessage returnMessage)
+    private void handleTextMessage(PrintWriter out, WxMessage returnMessage)
             throws IllegalAccessException, IntrospectionException, InvocationTargetException {
         returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
         returnMessage.setContent("你好");
-        weixinService.sendReturnMessage(out,WxUtil.generateReturnMessage(returnMessage));
+        weixinService.sendReturnMessage(out, WxUtil.generateReturnMessage(returnMessage));
     }
 }
