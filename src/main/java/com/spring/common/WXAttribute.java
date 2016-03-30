@@ -16,5 +16,8 @@ public class WXAttribute {
     public static final String ECHOSTR = "echostr";
     public static final String MSGTYPE_TEXT = "text";
     public static final String MSGTYPE_EVENT = "event";
+    public static final String CLICK_EVENT = "CLICK";
+    public static final String WEBLOGIC_EVENT_KEY = "GET_WEBLOGIC_MSG";
+    public static final String STORAGE_EVENT_KEY = "GET_STORAGE_MSG";
     public static final String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=";
 }

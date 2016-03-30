@@ -4,10 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.common.WXAttribute;
 import com.spring.model.AccessToken;
+import com.spring.model.WxMessage;
 import com.spring.service.IWeixinService;
 import com.spring.util.StringUtil;
 import com.spring.util.WxUtil;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 import org.springframework.stereotype.Service;
+
 
 import java.io.*;
 import java.util.HashMap;
@@ -18,7 +24,7 @@ import java.util.Map;
  */
 
 @Service
-public class WeixinService implements IWeixinService{
+public class WeixinServiceImpl implements IWeixinService{
     private static Map<String,String> tokenMap = new HashMap<String,String>();
     public String generateAccessToken() {
         BufferedReader br = null;
@@ -63,6 +69,18 @@ public class WeixinService implements IWeixinService{
             token = generateAccessToken();
         }
         return token;
+    }
+
+    public void handleWxEventRequest(WxMessage eventMessage) {
+        SAXReader reader = new SAXReader();
+        try {
+            Document document = reader.read(new File("src\\main\\resources\\conf\\eventMapping.xml"));
+            String xmlStr = document.asXML();
+            System.out.println(xmlStr);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String getAccessTokenNoChache() {

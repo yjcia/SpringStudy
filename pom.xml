@@ -26,6 +26,7 @@
         <httpclient.version>4.5.2</httpclient.version>
         <quartz.version>2.2.2</quartz.version>
         <xstream.version>1.4.9</xstream.version>
+        <dom4j.version>1.6.1</dom4j.version>
     </properties>
 
     <dependencies>
@@ -217,6 +218,11 @@
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>${xstream.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${dom4j.version}</version>
         </dependency>
         <!-- wei xin -->
     </dependencies>

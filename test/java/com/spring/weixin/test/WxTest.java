@@ -4,9 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.common.WXAttribute;
 import com.spring.model.AccessToken;
+import com.spring.model.WxClick;
+import com.spring.model.WxClickEvent;
 import com.spring.model.WxMessage;
 import com.spring.service.IWeixinService;
 import com.spring.util.WxUtil;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -122,8 +126,11 @@ public class WxTest {
     public void testGenerateMenu(){
         String menuStr =
                 "{\"button\":" +
-                        "[{\"name\":\"按钮测试\"," +
-                        "\"sub_button\":[{\"type\":\"click\",\"name\":\"拉取消息\",\"key\":\"GET_MSG\"}]}";
+                        "[{\"name\":\"ENVIRONMENT\"," +
+                        "\"sub_button\":[" +
+                        "{\"type\":\"click\",\"name\":\"WEBLOGIC\",\"key\":\"GET_WEBLOGIC_MSG\"}," +
+                        "{\"type\":\"click\",\"name\":\"STORAGE\",\"key\":\"GET_STORAGE_MSG\"}"+
+                        "]}";
         HttpPost httpPost = new HttpPost(WXAttribute.CREATE_MENU_URL + weixinService.getAccessToken());
         httpPost.setEntity(new StringEntity(menuStr,HTTP.UTF_8));
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -145,5 +152,33 @@ public class WxTest {
 
     }
 
+    @Test
+    public void testEventMappingXml(){
+        WxClickEvent weblogicEvent = new WxClickEvent();
+        weblogicEvent.setEventKey(WXAttribute.WEBLOGIC_EVENT_KEY);
+        weblogicEvent.setEventMapingClass("weblogicEventClass");
+        weblogicEvent.setEventMapingMethod("handleShowWeblogicEvent");
 
+        WxClickEvent storageEvent = new WxClickEvent();
+        storageEvent.setEventKey(WXAttribute.STORAGE_EVENT_KEY);
+        storageEvent.setEventMapingClass("storageEventClass");
+        storageEvent.setEventMapingMethod("handleShowStorageEvent");
+
+        List<WxClickEvent> clcikEventList = new ArrayList<WxClickEvent>();
+        clcikEventList.add(weblogicEvent);
+        clcikEventList.add(storageEvent);
+
+        WxClick click = new WxClick();
+        click.setEventName(WXAttribute.CLICK_EVENT);
+        click.setClickEventList(clcikEventList);
+
+        XStream xStream = new XStream(new DomDriver());
+        xStream.autodetectAnnotations(true);
+        System.out.println(xStream.toXML(click));
+    }
+
+    @Test
+    public void testReadEventMappingXml(){
+        weixinService.handleWxEventRequest(new WxMessage());
+    }
 }

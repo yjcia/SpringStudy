@@ -99,9 +99,10 @@ public class WxOperationController {
 
     private void handleEventMessage(PrintWriter out, WxMessage returnMessage)
             throws IllegalAccessException, IntrospectionException, InvocationTargetException {
-        returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
-        returnMessage.setContent("你好");
-        weixinService.sendReturnMessage(out, WxUtil.generateReturnMessage(returnMessage));
+//        returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
+//        returnMessage.setContent("你好");
+//        weixinService.sendReturnMessage(out, WxUtil.generateReturnMessage(returnMessage));
+        weixinService.handleWxEventRequest(returnMessage);
     }
 
     private void handleTextMessage(PrintWriter out, WxMessage returnMessage)

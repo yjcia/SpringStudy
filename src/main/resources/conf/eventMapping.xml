@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<WxClick>
+    <eventName>CLICK</eventName>
+    <wxClickEvent>
+        <eventKey>GET_WEBLOGIC_MSG</eventKey>
+        <eventMapingClass>com.spring.service.impl.WeixinServiceImpl</eventMapingClass>
+        <eventMapingMethod>handleShowWeblogicEvent</eventMapingMethod>
+    </wxClickEvent>
+    <wxClickEvent>
+        <eventKey>GET_STORAGE_MSG</eventKey>
+        <eventMapingClass>com.spring.service.impl.WeixinServiceImpl</eventMapingClass>
+        <eventMapingMethod>handleShowStorageEvent</eventMapingMethod>
+    </wxClickEvent>
+</WxClick>
