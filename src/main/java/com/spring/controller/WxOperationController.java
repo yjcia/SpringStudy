@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import com.spring.common.WXAttribute;
 import com.spring.model.WxMessage;
 import com.spring.service.IWeixinService;
 import com.spring.util.StringUtil;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.IntrospectionException;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 /**
  * Created by YanJun on 2016/3/28.
@@ -49,31 +53,12 @@ public class WxOperationController {
 
     }
 
-
+    //测试账号接口认证
     @RequestMapping(value="/wxGetMsg",method = RequestMethod.POST)
     public void getTesterClientMessage(HttpServletRequest request,
                       HttpServletResponse response) {
-        try {
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter out = response.getWriter();
-            String message = WxUtil.getReceiveMessage(request);
-            WxMessage wMessage = weixinService.prepareWxMessageBean(WxMessage.class,message);
-            logger.debug("receive message ---> " + wMessage);
+       getClientMessage(request,response);
 
-//          out.write("success");
-            out.write("<xml>" +
-                    "<ToUserName><![CDATA[oYV3EwEwUfg4PYLUUBokswrnN_tY]]></ToUserName>" +
-                    "<FromUserName><![CDATA[gh_6b8ad83d3181]]></FromUserName>" +
-                    "<CreateTime>1459220131</CreateTime>" +
-                    "<MsgType><![CDATA[text]]></MsgType>" +
-                    "<Content><![CDATA[你好]]></Content>" +
-                    "</xml>");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @RequestMapping(value="/wx",method = RequestMethod.POST)
@@ -83,22 +68,47 @@ public class WxOperationController {
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();
-            String message = WxUtil.getReceiveMessage(request);
+            String message = WxUtil.encodeReceiveMessage(request);
             WxMessage wMessage = weixinService.prepareWxMessageBean(WxMessage.class,message);
             logger.debug("receive message ---> " + wMessage);
+            WxMessage returnMessage = new WxMessage();
+            returnMessage.setToUserName(wMessage.getFromUserName());
+            returnMessage.setFromUserName(wMessage.getToUserName());
+            returnMessage.setCreateTime(new Date().getTime());
+            returnMessage.setEventKey(wMessage.getEventKey());
+            returnMessage.setEvent(wMessage.getEvent());
 
-//          out.write("success");
-            out.write("<xml>" +
-                    "<ToUserName><![CDATA[owrTqsr9_KT5kaackeeJ9p8SK9Xc]]></ToUserName>" +
-                    "<FromUserName><![CDATA[gh_26e03d2fdde0]]></FromUserName>" +
-                    "<CreateTime>1459220131</CreateTime>" +
-                    "<MsgType><![CDATA[text]]></MsgType>" +
-                    "<Content><![CDATA[你好]]></Content>" +
-                    "</xml>");
+            if(wMessage.getMsgType().equals(WXAttribute.MSGTYPE_TEXT)){
+                handleTextMessage(out,returnMessage);
+
+            }else if(wMessage.getMsgType().equals(WXAttribute.MSGTYPE_EVENT)){
+                handleEventMessage(out,returnMessage);
+            }
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void handleEventMessage(PrintWriter out, WxMessage returnMessage)
+            throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+        returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
+        returnMessage.setContent("你好");
+        weixinService.sendReturnMessage(out,WxUtil.generateReturnMessage(returnMessage));
+    }
+
+    private void handleTextMessage(PrintWriter out ,WxMessage returnMessage)
+            throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+        returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
+        returnMessage.setContent("你好");
+        weixinService.sendReturnMessage(out,WxUtil.generateReturnMessage(returnMessage));
     }
 }

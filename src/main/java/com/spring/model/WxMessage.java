@@ -1,6 +1,8 @@
 package com.spring.model;
 
+import com.spring.annotation.DataAttribute;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 import java.io.Serializable;
 
@@ -12,17 +14,34 @@ import java.io.Serializable;
 public class WxMessage implements Serializable {
 
     @XStreamAlias("ToUserName")
+    @DataAttribute.NeedDataFormatter(true)
     private String toUserName;
+
     @XStreamAlias("FromUserName")
+    @DataAttribute.NeedDataFormatter(true)
     private String fromUserName;
+
     @XStreamAlias("CreateTime")
     private Long createTime;
+
     @XStreamAlias("MsgType")
+    @DataAttribute.NeedDataFormatter(true)
     private String msgType;
+
     @XStreamAlias("MsgId")
     private Long msgId;
+
     @XStreamAlias("Content")
+    @DataAttribute.NeedDataFormatter(true)
     private String content;
+
+    @XStreamAlias("Event")
+    @DataAttribute.NeedDataFormatter(true)
+    private String event;
+
+    @XStreamAlias("EventKey")
+    @DataAttribute.NeedDataFormatter(true)
+    private String eventKey;
 
     public String getToUserName() {
         return toUserName;
@@ -71,6 +90,22 @@ public class WxMessage implements Serializable {
         this.content = content;
     }
 
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public String getEventKey() {
+        return eventKey;
+    }
+
+    public void setEventKey(String eventKey) {
+        this.eventKey = eventKey;
+    }
+
     @Override
     public String toString() {
         return "WxMessage{" +
@@ -80,6 +115,8 @@ public class WxMessage implements Serializable {
                 ", msgType='" + msgType + '\'' +
                 ", msgId=" + msgId +
                 ", content='" + content + '\'' +
+                ", event='" + event + '\'' +
+                ", eventKey='" + eventKey + '\'' +
                 '}';
     }
 }

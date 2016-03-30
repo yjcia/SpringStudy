@@ -2,23 +2,48 @@ package com.spring.weixin.test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.spring.common.WXAttribute;
 import com.spring.model.AccessToken;
 import com.spring.model.WxMessage;
+import com.spring.service.IWeixinService;
 import com.spring.util.WxUtil;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by YanJun on 2016/3/28.
  */
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations =
+        {"classpath:conf/applicationContext.xml",
+                "classpath:conf/mybatis-configuration.xml"})
 public class WxTest {
     private static final String APPID = "wxa85db346322cb0c1";
     private static final String APPSECRET = "cfbb95c56b60c76f8021b5eb51ed8db9";
+
+    @Autowired
+    private IWeixinService weixinService;
+
     @Test
     public void testGetAccessToken(){
         HttpGet httpget = new HttpGet(
@@ -91,4 +116,34 @@ public class WxTest {
 //            System.out.println("server valid error");
 //        }
     }
+
+
+    @Test
+    public void testGenerateMenu(){
+        String menuStr =
+                "{\"button\":" +
+                        "[{\"name\":\"按钮测试\"," +
+                        "\"sub_button\":[{\"type\":\"click\",\"name\":\"拉取消息\",\"key\":\"GET_MSG\"}]}";
+        HttpPost httpPost = new HttpPost(WXAttribute.CREATE_MENU_URL + weixinService.getAccessToken());
+        httpPost.setEntity(new StringEntity(menuStr,HTTP.UTF_8));
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+
+            HttpResponse response = httpClient.execute(httpPost);
+            InputStream is = response.getEntity().getContent();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            while(true){
+                String line = br.readLine();
+                System.out.println(line);
+                if(line == null){
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }

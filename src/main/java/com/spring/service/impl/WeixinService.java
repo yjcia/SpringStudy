@@ -7,16 +7,9 @@ import com.spring.model.AccessToken;
 import com.spring.service.IWeixinService;
 import com.spring.util.StringUtil;
 import com.spring.util.WxUtil;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +65,19 @@ public class WeixinService implements IWeixinService{
         return token;
     }
 
+    public String getAccessTokenNoChache() {
+        String token;
+        token = generateAccessToken();
+        return token;
+    }
+
     public <T> T prepareWxMessageBean(Class<T> clazz, String message) {
         return WxUtil.analysisWxMessage(clazz,message);
+    }
+
+    public void sendReturnMessage(PrintWriter out, String message) {
+        out.write(message);
+        out.flush();
+        out.close();
     }
 }
