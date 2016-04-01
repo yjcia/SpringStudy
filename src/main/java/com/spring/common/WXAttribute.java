@@ -20,4 +20,6 @@ public class WXAttribute {
     public static final String WEBLOGIC_EVENT_KEY = "GET_WEBLOGIC_MSG";
     public static final String STORAGE_EVENT_KEY = "GET_STORAGE_MSG";
     public static final String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=";
+    public static final String MAPPING_CONFIG = "conf/eventMapping.xml";
+    public static final String WXCLICK_NODE = "wxClick";
 }

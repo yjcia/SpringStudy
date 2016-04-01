@@ -4,20 +4,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.common.WXAttribute;
 import com.spring.model.AccessToken;
+import com.spring.model.WxClick;
+import com.spring.model.WxClickEvent;
 import com.spring.model.WxMessage;
 import com.spring.service.IWeixinService;
 import com.spring.util.StringUtil;
 import com.spring.util.WxUtil;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Created by YanJun on 2016/3/28.
@@ -26,6 +33,8 @@ import java.util.Map;
 @Service
 public class WeixinServiceImpl implements IWeixinService{
     private static Map<String,String> tokenMap = new HashMap<String,String>();
+    private static final Logger logger = LoggerFactory.getLogger(WeixinServiceImpl.class);
+    private static Map<String,Object> eventMappingClassMap = new HashMap<String, Object>();
     public String generateAccessToken() {
         BufferedReader br = null;
         String tokenResult = null;
@@ -71,16 +80,70 @@ public class WeixinServiceImpl implements IWeixinService{
         return token;
     }
 
-    public void handleWxEventRequest(WxMessage eventMessage) {
+    public WxMessage handleWxEventRequest(WxMessage receiveMessage,WxMessage returnMessage) {
         SAXReader reader = new SAXReader();
+        Object handleObject = null;
+        //WxMessage returnResultMessage = null;
         try {
-            Document document = reader.read(new File("src\\main\\resources\\conf\\eventMapping.xml"));
+            Document document = reader.read(
+                    this.getClass().getClassLoader().getResourceAsStream(WXAttribute.MAPPING_CONFIG));
             String xmlStr = document.asXML();
             System.out.println(xmlStr);
+            XStream xStream = new XStream(new DomDriver());
+            xStream.autodetectAnnotations(true);
+            xStream.alias(WXAttribute.WXCLICK_NODE,WxClick.class);
+            WxClick wxClick = (WxClick)xStream.fromXML(xmlStr);
+            if(receiveMessage.getEvent().equals(wxClick.getEventName())){
+                List<WxClickEvent> clickEventList = wxClick.getClickEventList();
+                for(WxClickEvent event : clickEventList){
+                    String eventKey = event.getEventKey();
+                    logger.debug("weixin event:" + event);
+                    if(eventKey.equals(receiveMessage.getEventKey())){
+                        if(eventMappingClassMap.get(eventKey) != null){
+                            handleObject = eventMappingClassMap.get(eventKey);
+                        }
+                        else{
+                            String classFullName = event.getEventMapingClass();
+                            Class clazz = Class.forName(classFullName);
+                            System.out.println(clazz);
+                            handleObject = clazz.newInstance();
+                            eventMappingClassMap.put(eventKey,handleObject);
+                        }
+                        if(handleObject instanceof WeixinServiceImpl){
+                            Method[] methods = handleObject.getClass().getDeclaredMethods();
+                            for(Method method : methods){
+                                if(event.getEventMapingMethod().equals(method.getName())){
+                                    String returnResultStr = (String)method.invoke(handleObject);
+                                    returnMessage.setContent(returnResultStr);
+                                    returnMessage.setCreateTime(new Date().getTime());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         } catch (DocumentException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
+        return returnMessage;
+    }
 
+    public String handleShowWeblogicEvent() {
+        logger.debug("handleShowWeblogicEvent invoke !");
+        return "weblogic";
+    }
+
+    public String handleShowStorageEvent() {
+        logger.debug("handleShowStorageEvent invoke !");
+        return "storage";
     }
 
     public String getAccessTokenNoChache() {

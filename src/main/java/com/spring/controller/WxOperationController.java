@@ -70,18 +70,23 @@ public class WxOperationController {
             String message = WxUtil.encodeReceiveMessage(request);
             WxMessage wMessage = weixinService.prepareWxMessageBean(WxMessage.class, message);
             logger.debug("receive message ---> " + wMessage);
-            WxMessage returnMessage = new WxMessage();
-            returnMessage.setToUserName(wMessage.getFromUserName());
-            returnMessage.setFromUserName(wMessage.getToUserName());
-            returnMessage.setCreateTime(new Date().getTime());
-            returnMessage.setEventKey(wMessage.getEventKey());
-            returnMessage.setEvent(wMessage.getEvent());
+
+
 
             if (wMessage.getMsgType().equals(WXAttribute.MSGTYPE_TEXT)) {
+                WxMessage returnMessage = new WxMessage();
+                returnMessage.setToUserName(wMessage.getFromUserName());
+                returnMessage.setFromUserName(wMessage.getToUserName());
+                returnMessage.setCreateTime(new Date().getTime());
+                returnMessage.setMsgType(wMessage.getMsgType());
                 handleTextMessage(out, returnMessage);
 
             } else if (wMessage.getMsgType().equals(WXAttribute.MSGTYPE_EVENT)) {
-                handleEventMessage(out, returnMessage);
+                WxMessage returnMessage = new WxMessage();
+                returnMessage.setToUserName(wMessage.getFromUserName());
+                returnMessage.setFromUserName(wMessage.getToUserName());
+                returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
+                handleEventMessage(out,wMessage,returnMessage);
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -97,12 +102,10 @@ public class WxOperationController {
         }
     }
 
-    private void handleEventMessage(PrintWriter out, WxMessage returnMessage)
+    private void handleEventMessage(PrintWriter out, WxMessage receiveMessage,WxMessage returnMessage)
             throws IllegalAccessException, IntrospectionException, InvocationTargetException {
-//        returnMessage.setMsgType(WXAttribute.MSGTYPE_TEXT);
-//        returnMessage.setContent("你好");
-//        weixinService.sendReturnMessage(out, WxUtil.generateReturnMessage(returnMessage));
-        weixinService.handleWxEventRequest(returnMessage);
+        WxMessage eventReturnMessage = weixinService.handleWxEventRequest(receiveMessage,returnMessage);
+        weixinService.sendReturnMessage(out,WxUtil.generateReturnMessage(eventReturnMessage));
     }
 
     private void handleTextMessage(PrintWriter out, WxMessage returnMessage)

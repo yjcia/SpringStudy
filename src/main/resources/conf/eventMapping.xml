@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<WxClick>
+<wxClick>
     <eventName>CLICK</eventName>
     <wxClickEvent>
         <eventKey>GET_WEBLOGIC_MSG</eventKey>
@@ -11,4 +10,4 @@
         <eventMapingClass>com.spring.service.impl.WeixinServiceImpl</eventMapingClass>
         <eventMapingMethod>handleShowStorageEvent</eventMapingMethod>
     </wxClickEvent>
-</WxClick>
+</wxClick>

@@ -15,5 +15,7 @@ public interface IWeixinService {
 
     void sendReturnMessage(PrintWriter out,String message);
 
-    void handleWxEventRequest(WxMessage eventMessage);
+    WxMessage handleWxEventRequest(WxMessage receiveMessage,WxMessage eventMessage);
+
+    String handleShowWeblogicEvent();
 }

@@ -41,4 +41,13 @@ public class WxClickEvent {
     public void setEventMapingMethod(String eventMapingMethod) {
         this.eventMapingMethod = eventMapingMethod;
     }
+
+    @Override
+    public String toString() {
+        return "WxClickEvent{" +
+                "eventKey='" + eventKey + '\'' +
+                ", eventMapingClass='" + eventMapingClass + '\'' +
+                ", eventMapingMethod='" + eventMapingMethod + '\'' +
+                '}';
+    }
 }

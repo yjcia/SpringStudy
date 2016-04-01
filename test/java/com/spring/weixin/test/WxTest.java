@@ -179,6 +179,13 @@ public class WxTest {
 
     @Test
     public void testReadEventMappingXml(){
-        weixinService.handleWxEventRequest(new WxMessage());
+        WxMessage message = new WxMessage();
+        message.setToUserName("oYV3EwEwUfg4PYLUUBokswrnN_tY");
+        message.setFromUserName("gh_6b8ad83d3181");
+        message.setCreateTime(Long.parseLong("1459389069961"));
+        message.setMsgType("event");
+        message.setEvent("CLICK");
+        message.setEventKey("GET_WEBLOGIC_MSG");
+        //weixinService.handleWxEventRequest(message);
     }
 }

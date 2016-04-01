@@ -9,7 +9,7 @@ import java.util.List;
  * Created by YanJun on 2016/3/30.
  */
 
-@XStreamAlias("WxClick")
+@XStreamAlias("wxClick")
 public class WxClick {
     @XStreamAlias("eventName")
     private String eventName;
