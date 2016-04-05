@@ -1,7 +1,9 @@
 package com.spring.service;
 
 import com.spring.model.Storage;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
