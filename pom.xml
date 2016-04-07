@@ -27,6 +27,7 @@
         <quartz.version>2.2.2</quartz.version>
         <xstream.version>1.4.9</xstream.version>
         <dom4j.version>1.6.1</dom4j.version>
+        <echarts.version>3.0.0.1</echarts.version>
     </properties>
 
     <dependencies>
@@ -195,6 +196,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.abel533</groupId>
+            <artifactId>ECharts</artifactId>
+            <version>${echarts.version}</version>
         </dependency>
         <!-- websocket -->
 

@@ -310,14 +310,14 @@
 
         },'click #weblogicLog': function (e, value, row, index) {
             $('#showWeblogicLog').modal('show');
-            websocket = new WebSocket('ws://10.104.46.238:8080/environment/weblogicServerLog?id='+row.id);
+            websocket = new WebSocket('ws://10.104.46.238:8081/environment/weblogicServerLog?id='+row.id);
             websocket.onmessage = function(event) {
                 $('#log-text').append(event.data);
                 $('#log-text').scrollTop( $('#log-text')[0].scrollHeight );
             };
         },'click #startWeblogic': function (e, value, row, index) {
             $('#showStartWeblogicLog').modal('show');
-            websocket = new WebSocket('ws://10.104.46.238:8080/environment/startWeblogic?id='+row.id);
+            websocket = new WebSocket('ws://10.104.46.238:8081/environment/startWeblogic?id='+row.id);
             websocket.onmessage = function(event) {
                 $('#startlog-text').append(event.data);
                 $('#startlog-text').scrollTop($('#startlog-text')[0].scrollHeight);

@@ -12,7 +12,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 /**
  * Created by YanJun on 2016/3/18.
  */
-@WebAppConfiguration
+
+@Configuration
 @EnableWebMvc
 @EnableWebSocket
 public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
@@ -21,6 +22,11 @@ public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocke
     private WeblogicServerLogHandler weblogicServerLogHandler;
     @Autowired
     private StartWeblogicServerHandler startWeblogicServerHandler;
+    @Autowired
+    private StartServerMemoryMonitorHandler startServerMemoryMonitorHandler;
+    @Autowired
+    private StartServerCpuMonitorHandler startServerCpuMonitorHandler;
+
 
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         webSocketHandlerRegistry.addHandler(weblogicServerLogHandler, "/weblogicServerLog")
@@ -28,6 +34,13 @@ public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocke
 
         webSocketHandlerRegistry.addHandler(startWeblogicServerHandler, "/startWeblogic")
                 .addInterceptors(new WebSocketHandshakeInterceptor());
+
+        webSocketHandlerRegistry.addHandler(startServerMemoryMonitorHandler, "/getServerMemoryInfo")
+                .addInterceptors(new WebSocketServerMemoryHandshakeInterceptor());
+
+        webSocketHandlerRegistry.addHandler(startServerCpuMonitorHandler, "/getServerCpuInfo")
+                .addInterceptors(new WebSocketServerCpuHandshakeInterceptor());
+
     }
 
 

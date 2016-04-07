@@ -36,6 +36,10 @@
                     <a href="/environment/logAnalysis"><span
                         class="glyphicon glyphicon-object-align-bottom"></span>&nbsp;&nbsp;Log Analysis</a>
                 </li>
+                <li>
+                    <a href="/environment/server"><span
+                            class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Server</a>
+                </li>
             </ul>
         </div>
     </div>

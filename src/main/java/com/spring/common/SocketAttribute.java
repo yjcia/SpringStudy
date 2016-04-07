@@ -12,4 +12,6 @@ public class SocketAttribute {
     public static final String WEBLOGIC_NOHUP_SCRIPT = "tail -f nohup.out";
     public static final String WEBLOGIC_START_SCRIPT = "./startWeblogic.sh";
     public static final String STORAGE_USE_SCRIPT = "df -vh";
+    public static final String FREE_MEM_SCRIPT = "free -m";
+    public static final String FREE_CPU_SCRIPT = "mpstat 1 1";
 }
