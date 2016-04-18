@@ -84,6 +84,7 @@
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
+                    width:100,
                     formatter:usedFormatter
                 },
                 {
@@ -122,9 +123,9 @@
             barStyleClass = "progress-bar-danger";
         }
         return [
-            '<div class="progress">' +
+            '<div class="progress" style="width: 100px">' +
             '<div class="progress-bar progress-bar-striped active '+ barStyleClass + '" role="progressbar" ' +
-            'aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+row.use+';">' +
+            'aria-valuenow="'+ row.use +'" aria-valuemin="0" aria-valuemax="100" style="width:'+row.use+';">' +
              row.use+'%</div></div>'
         ].join('');
     }

@@ -27,8 +27,13 @@ public class WebSocketUtil {
                 if (result) {
                     connMap.put(host, conn);
                 } else {
-                    connMap.put(host, null);
-                    throw new IOException("Authentication failed.");
+                    boolean resultAgain = conn.authenticateWithPassword(username,SocketAttribute.WEBLOGIC_PWD_2);
+                    if(resultAgain){
+                        connMap.put(host, conn);
+                    }else{
+                        connMap.put(host, null);
+                        throw new IOException("Authentication failed.");
+                    }
                 }
             }
         } catch (IOException e) {
