@@ -39,7 +39,7 @@ public class StartServerMemoryMonitorHandler implements WebSocketHandler {
 
     public void sendMemoryInfoMessage() throws IOException {
         String memoryInfo = serverService.calServerMemUsage();
-        if(webSocketSession != null)
+        if(webSocketSession != null && webSocketSession.isOpen())
             webSocketSession.sendMessage(new TextMessage(memoryInfo));
     }
 
@@ -59,7 +59,7 @@ public class StartServerMemoryMonitorHandler implements WebSocketHandler {
 
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
         logger.debug("websocket connection closed......");
-        webSocketSession.close();
+        //webSocketSession.close();
 
     }
 

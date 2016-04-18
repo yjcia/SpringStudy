@@ -30,7 +30,7 @@ public class StartServerCpuMonitorHandler implements WebSocketHandler {
 
     public void sendCpuInfoMessage() throws IOException {
         String cpuInfo = serverService.calServerCpuUsage();
-        if(webSocketSession != null)
+        if(webSocketSession != null && webSocketSession.isOpen())
             webSocketSession.sendMessage(new TextMessage(cpuInfo));
     }
 
@@ -50,7 +50,7 @@ public class StartServerCpuMonitorHandler implements WebSocketHandler {
 
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
         logger.debug("websocket connection closed......");
-        webSocketSession.close();
+        //webSocketSession.close();
 
     }
 

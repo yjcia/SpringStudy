@@ -14,6 +14,7 @@
     <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="bootstrap-table/dist/bootstrap-table.js"></script>
     <script type="text/javascript" src="echarts/echarts.common.min.js"></script>
+    <script type="text/javascript" src="websocket/reconnecting-websocket.js"></script>
 </head>
 <body>
 <jsp:include page="toolbar.jsp"/>
@@ -36,14 +37,14 @@
     var memWebsocket = null;
     var cpuWebsocket = null;
     $(function () {
-        memWebsocket = new WebSocket('ws://10.104.46.238:8081/environment/getServerMemoryInfo');
+        memWebsocket = new ReconnectingWebSocket('ws://10.104.46.238:8081/environment/getServerMemoryInfo');
         memWebsocket.onmessage = function(event) {
             var myChart = echarts.init(document.getElementById("memoryInfo"));
             var option = JSON.parse(event.data);
             myChart.setOption(option);
         };
 
-        cpuWebsocket = new WebSocket('ws://10.104.46.238:8081/environment/getServerCpuInfo');
+        cpuWebsocket = new ReconnectingWebSocket('ws://10.104.46.238:8081/environment/getServerCpuInfo');
         cpuWebsocket.onmessage = function(event) {
             var myChart = echarts.init(document.getElementById("cpuInfo"));
             var option = JSON.parse(event.data);
