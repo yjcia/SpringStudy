@@ -54,7 +54,7 @@
     </bean>
 
     <!-- 定义调用对象和调用对象的方法 -->
-    <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <bean id="jobAccessTokenTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <!-- 调用的类 -->
         <property name="targetObject">
             <ref bean="weixinServiceImpl"/>
@@ -64,21 +64,61 @@
             <value>generateAccessToken</value>
         </property>
     </bean>
+    <bean id="serverMemoryTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="startServerMemoryMonitorHandler"/>
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>sendMemoryInfoMessage</value>
+        </property>
+    </bean>
+    <bean id="serverCpuTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="startServerCpuMonitorHandler"/>
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>sendCpuInfoMessage</value>
+        </property>
+    </bean>
     <!-- 定义触发时间 -->
-    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <bean id="doGetAccessToken" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
-            <ref bean="jobtask"/>
+            <ref bean="jobAccessTokenTask"/>
         </property>
         <!-- cron表达式 -->
         <property name="cronExpression">
             <value>0 0 0/2 * * ?</value>
         </property>
     </bean>
+    <bean id="doGetServerMemUsage" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="serverMemoryTask"/>
+        </property>
+        <!-- cron表达式 -->
+        <property name="cronExpression">
+            <value>0/30 * * * * ?</value>
+        </property>
+    </bean>
+    <bean id="doGetServerCpuUsage" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="serverCpuTask"/>
+        </property>
+        <!-- cron表达式 -->
+        <property name="cronExpression">
+            <value>0/10 * * * * ?</value>
+        </property>
+    </bean>
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
     <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="doTime"/>
+                <ref bean="doGetAccessToken"/>
+                <ref bean="doGetServerMemUsage"/>
+                <ref bean="doGetServerCpuUsage"/>
             </list>
         </property>
     </bean>
