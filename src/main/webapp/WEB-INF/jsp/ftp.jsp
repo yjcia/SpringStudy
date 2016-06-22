@@ -46,7 +46,7 @@
             <div class="modal-body">
                 <form id="ftpAddForm" action="doSaveFtp" method="post">
                     <div class="form-group">
-                        <label for="inputHostName" >Host Name</label>
+                        <label>Host Name</label>
                         <input type="text" name="hostname" id="inputHostName" class="form-control"
                                placeholder="Host Name">
                     </div>
@@ -77,7 +77,7 @@
                     </div>
 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <input id="ftpSave" type="submit" class="btn btn-primary" value="Save"/>
 
                 </form>
             </div>
@@ -123,9 +123,37 @@
                     </div>
 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Update"/>
+                    <input type="submit" class="btn btn-primary" value="Update" id="updateFtpBtn"/>
 
                 </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="uploadFtp" tabindex="-1" role="dialog" aria-labelledby="uploadFtp">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="ftpUploadForm" action="doUploadFtp" enctype="multipart/form-data"
+                      method="post" target="uploadf">
+                    <input type="text" name="id" id="upload_ftp_id">
+                    <input type="text" name="hostname" id="upload_ftp_hostname"/>
+                    <input type="text" name="user" id="upload_ftp_user"/>
+                    <input type="text" name="password" id="upload_ftp_password"/>
+                    <input type="text" name="port" id="upload_ftp_port"/>
+                    <input type="text" name="path" id="upload_ftp_path"/>
+                    <input type="file" name="uploadFile" id="uploadFile"><br/>
+                    <div  class="progress progress-success progress-striped" style="width:50%">
+                        <div id='proBar'
+                             class="progress-bar progress-bar-striped active progress-bar-info"
+                             role="progressbar" style="width:0%;"></div>
+                    </div>
+                    <button type="button" class="btn btn-default" onclick="closeUpload()" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary" value="Upload" id="uploadFtpBtn"/>
+
+                </form>
+                <iframe name="uploadf" style="display:none"></iframe>
             </div>
 
         </div>
@@ -211,7 +239,6 @@
         });
         $('#removeButton').click(function () {
             var ids = getIdSelections();
-            //console.log([0].id);
             var removeFtps = $table.bootstrapTable('getSelections');
             var idsArr = '';
             for (var i = 0; i < removeFtps.length; i++) {
@@ -230,8 +257,26 @@
 
                 }
             });
-            //$('#removeButton').prop('disabled', true);
         });
+        $('#uploadFtpBtn').click(
+                function(){
+                    $('#ftpUploadForm').submit();
+                    var eventFun = function(){
+                        $.ajax({
+                            type: 'get',
+                            url: '/environment/getProgress',
+                            data: {},
+                            dataType: 'json',
+                            success : function(data){
+                                $('#proBar').css('width',data.rate+''+'%');
+                                $('#proBar').empty();
+                                $('#proBar').append(data.show);
+                                if(data.rate == 100){
+                                    window.clearInterval(intId);
+                                }
+                            }});};
+                    var intId = window.setInterval(eventFun,500);
+                });
 
     });
 
@@ -243,31 +288,37 @@
 
     function operateFormatter(value, row, index) {
         return [
-            '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>'
+            '<span id="update" class="glyphicon glyphicon-wrench" aria-hidden="true" style="cursor: hand"></span>' +
+            '&nbsp;&nbsp;',
+            '<span id="upload" class="glyphicon glyphicon-upload" aria-hidden="true" style="cursor: hand"></span>'
         ].join('');
+    }
+    function closeUpload(){
+        $('#uploadFtp').modal('hide');
+        $('#upload_ftp_id').val('');
+        $('#uploadFile').val('');
+        $('#proBar').attr("style","width:0%;");
+
     }
     window.operateEvents = {
         'click #update': function (e, value, row, index) {
-            $.ajax({
-                type: "post",
-                url: "/environment/getFtpById",
-                data: {ftpId: row.id},
-                success: function (data) {
-                    var jsonObj = $.parseJSON(data);
-                    if(jsonObj != null){
+        $('#updateFtp').modal('show');
+        $('#ftp_id').val(row.id);
+        $('#updateHostName').val(row.hostName);
+        $('#updateUser').val(row.user);
+        $('#updatePwd').val(row.password);
+        $('#updatePort').val(row.port);
+        $('#updatePath').val(row.path);
+        $('#updateRemark').val(row.remark);
 
-                        $('#updateFtp').modal('show');
-                        $('#ftp_id').val(jsonObj.id);
-                        $('#updateHostName').val(jsonObj.hostName);
-                        $('#updateUser').val(jsonObj.user);
-                        $('#updatePwd').val(jsonObj.password);
-                        $('#updatePort').val(jsonObj.port);
-                        $('#updatePath').val(jsonObj.path);
-                        $('#updateRemark').val(jsonObj.remark);
-                    }
-                }
-            });
-
+        },'click #upload': function (e, value, row, index) {
+            $('#uploadFtp').modal('show');
+            $('#upload_ftp_id').val(row.id);
+            $('#upload_ftp_hostname').val(row.hostName);
+            $('#upload_ftp_user').val(row.user);
+            $('#upload_ftp_password').val(row.password);
+            $('#upload_ftp_port').val(row.port);
+            $('#upload_ftp_path').val(row.path);
         }
     };
 

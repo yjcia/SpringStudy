@@ -5,7 +5,7 @@ package com.spring.common;
  */
 public class EchartsAttribute {
     public static final String MEM_LINE_TITLE = "Server Memory";
-    public static final String CPU_LINE_TITLE = "Server Cpu";
+    public static final String CPU_LINE_TITLE = "Server CPU";
     public static final String MEM_LINE_LEGEND = "Server Memory Usage";
     public static final String MEM_USAGE_SERIES = "Usage Memory (MB)";
     public static final String MEM_TOTAL_SERIES = "Total Memory (MB)";
