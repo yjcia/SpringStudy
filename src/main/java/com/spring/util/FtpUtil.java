@@ -1,11 +1,6 @@
 package com.spring.util;
 
 import com.jcraft.jsch.*;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
