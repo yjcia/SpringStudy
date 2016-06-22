@@ -137,17 +137,21 @@
             <div class="modal-body">
                 <form id="ftpUploadForm" action="doUploadFtp" enctype="multipart/form-data"
                       method="post" target="uploadf">
-                    <input type="text" name="id" id="upload_ftp_id">
-                    <input type="text" name="hostname" id="upload_ftp_hostname"/>
-                    <input type="text" name="user" id="upload_ftp_user"/>
-                    <input type="text" name="password" id="upload_ftp_password"/>
-                    <input type="text" name="port" id="upload_ftp_port"/>
-                    <input type="text" name="path" id="upload_ftp_path"/>
+                    <input type="hidden" name="id" id="upload_ftp_id">
+                    <input type="hidden" name="hostname" id="upload_ftp_hostname"/>
+                    <input type="hidden" name="user" id="upload_ftp_user"/>
+                    <input type="hidden" name="password" id="upload_ftp_password"/>
+                    <input type="hidden" name="port" id="upload_ftp_port"/>
+                    <input type="hidden" name="path" id="upload_ftp_path"/>
                     <input type="file" name="uploadFile" id="uploadFile"><br/>
-                    <div  class="progress progress-success progress-striped" style="width:50%">
-                        <div id='proBar'
-                             class="progress-bar progress-bar-striped active progress-bar-info"
-                             role="progressbar" style="width:0%;"></div>
+                    <div class="form-group">
+                        <div class="progress progress-success progress-striped">
+                            <div id='proBar'
+                                 class="progress-bar progress-bar-striped active progress-bar-info"
+                                 role="progressbar" style="width:0%;">
+
+                            </div>
+                        </div>
                     </div>
                     <button type="button" class="btn btn-default" onclick="closeUpload()" data-dismiss="modal">Close</button>
                     <input type="button" class="btn btn-primary" value="Upload" id="uploadFtpBtn"/>
